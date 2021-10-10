@@ -292,9 +292,6 @@ public:
 	{
 		x = 0, y = 0, z = 0;
 	}
-	// Point() : x(this->x), y(this->y), z(this->z)
-	// {
-	// }
 	Point(float x, float y, float z)
 	{
 		this->x = x;
