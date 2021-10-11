@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string.h>
 #define SIZE 100
-#define GARBAGE "AMOGUUUUUS"
 class Student
 {
 	char* name;
@@ -368,5 +367,5 @@ int main()
 	//delete student;
 	Point* point = new Point(10, 20, 30);
 	point->info();
-
+	delete point;
 }
