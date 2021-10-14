@@ -52,9 +52,13 @@ void fill(IntArray& arr, int number_of_elm)
 int main()
 {
 	IntArray arr;
+	fill(arr, 10);
 	print_array(arr);
-	arr.erase(2);
+	arr.pop_back();
 	print_array(arr);
-
+	arr.at(0) = 1337;
+	print_array(arr);
+	
+    
 	
 }
