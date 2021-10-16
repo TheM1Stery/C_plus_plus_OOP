@@ -1,6 +1,6 @@
 #include "IntArray.h"
-
-
+#include <stdexcept>
+#include <initializer_list>
 
 IntArray::IntArray()
 {
@@ -9,9 +9,8 @@ IntArray::IntArray()
 	int_array = new int[actual_size];
 }
 
-IntArray::IntArray(int actual_size) : actual_size(actual_size)
+IntArray::IntArray(int actual_size) : actual_size(actual_size), fixed_size(0)
 {
-	fixed_size = 0;
 	if (actual_size < 0)
 	{
 		this->actual_size = 0;
@@ -21,6 +20,18 @@ IntArray::IntArray(int actual_size) : actual_size(actual_size)
 	int_array = new int[actual_size];
 }
 
+
+IntArray::IntArray(std::initializer_list<int> list)
+{
+	actual_size = list.size();
+	fixed_size = list.size();
+	int_array = new int[list.size()];
+	int i = 0;
+	for (auto& item : list)
+	{
+		int_array[i++] = item;
+	}
+}
 
 
 
@@ -56,16 +67,29 @@ bool IntArray::empty()
 	return false;
 }
 
-void IntArray::reserve(size_t resevered_size)
+void IntArray::reserve(size_t reserved_size)
 {
 	if (empty())
 	{
 		delete[] int_array;
-		int_array = new int[resevered_size];
-		actual_size = resevered_size; 
+		int_array = new int[reserved_size];
+		actual_size = reserved_size;
+		return;
 	}
+	int* new_arr = new int[reserved_size];
+	for (int i = 0; i < fixed_size; i++)
+	{
+		new_arr[i] = int_array[i];
+	}
+	delete[] int_array;
+	int_array = new_arr;
+	actual_size = reserved_size;
+
+
 
 }
+
+
 
 void IntArray::push_back(int element) // append
 {
@@ -76,7 +100,7 @@ void IntArray::push_back(int element) // append
 			actual_size++;
 		}
 		int* new_arr = new int[actual_size * 2];
-		for (int i = 0; i < actual_size; i++)
+		for (int i = 0; i < fixed_size; i++)
 		{
 			new_arr[i] = int_array[i];
 		}
@@ -110,8 +134,27 @@ void IntArray::erase(int index)
 }
 
 
+int& IntArray::operator[](int index)
+{
+	return int_array[index];
+}
+
+void IntArray::operator=(std::initializer_list<int> list)
+{
+	int i = 0;
+	for (auto& item : list)
+	{
+		int_array[i++] = item;
+	}
+	fixed_size = list.size();
+}
+
 int& IntArray::at(int index)
 {
+	if (index < 0 || index >= fixed_size)
+	{
+		throw std::out_of_range("out of range");
+	}
 	return int_array[index];
 }
 

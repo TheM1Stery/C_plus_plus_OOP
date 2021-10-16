@@ -51,14 +51,19 @@ void fill(IntArray& arr, int number_of_elm)
 
 int main()
 {
-	IntArray arr;
-	fill(arr, 10);
+	// IntArray arr;
+	// fill(arr, 3);
+	// print_array(arr);
+	// arr[0] = 1337;
+	// print_array(arr);
+	/*IntArray arr{1,2,3,4,5,6,7};
 	print_array(arr);
-	arr.pop_back();
+	*/
+	IntArray arr{1,2,3,4,5,6,7,8,9};
 	print_array(arr);
-	arr.at(0) = 1337;
+	std::cout << arr.size() << ' ' << arr.capacity() << '\n';
+	arr = {1,2,3,4,5,6};
 	print_array(arr);
-	
-    
-	
+	std::cout << arr.size() << ' ' << arr.capacity() << '\n';
+
 }
