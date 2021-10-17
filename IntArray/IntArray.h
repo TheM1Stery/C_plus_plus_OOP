@@ -23,7 +23,8 @@ public:
 	int& at(int index); // access the element of the array
 	bool empty(); // check if the array is empty
 	void push_back(int element); // put the element to the end of the array
-	void assign(int index, int item); // change the value of the element at the given index
+	void assign(int count, int value); // asssign values to the array
+	void assign(std::initializer_list<int> list); // assign values to the array using initiliazer list
 	void pop_back(); // remove the last element
 	void erase(int index); // erase the element at the given index
 	~IntArray();

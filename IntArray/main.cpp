@@ -12,7 +12,7 @@ void print_array(IntArray& arr)
 {
 	for (int i = 0; i < arr.size(); i++)
 	{
-		std::cout << arr.at(i) << ' ';
+		std::cout << arr[i] << ' ';
 	}
 	std::cout << '\n';
 }
@@ -28,12 +28,12 @@ void selection_sort(IntArray& arr)
 		int temp = i;
 		for (int j = i + 1; j < arr.size(); j++)
 		{
-			if (arr.at(j) < arr.at(temp))
+			if (arr[j] < arr[temp])
 			{
 				temp = j;
 			}
 		}
-		std::swap(arr.at(i), arr.at(temp));
+		std::swap(arr[i], arr[temp]);
 	}
 
 }
@@ -59,11 +59,11 @@ int main()
 	/*IntArray arr{1,2,3,4,5,6,7};
 	print_array(arr);
 	*/
-	IntArray arr{1,2,3,4,5,6,7,8,9};
+	IntArray arr;
+	arr.assign(10, 0);
 	print_array(arr);
-	std::cout << arr.size() << ' ' << arr.capacity() << '\n';
-	arr = {1,2,3,4,5,6};
-	print_array(arr);
-	std::cout << arr.size() << ' ' << arr.capacity() << '\n';
+
+
+
 
 }

@@ -21,10 +21,8 @@ IntArray::IntArray(int actual_size) : actual_size(actual_size), fixed_size(0)
 }
 
 
-IntArray::IntArray(std::initializer_list<int> list)
+IntArray::IntArray(std::initializer_list<int> list) : actual_size(list.size()), fixed_size(list.size())
 {
-	actual_size = list.size();
-	fixed_size = list.size();
 	int_array = new int[list.size()];
 	int i = 0;
 	for (auto& item : list)
@@ -76,6 +74,10 @@ void IntArray::reserve(size_t reserved_size)
 		actual_size = reserved_size;
 		return;
 	}
+	if (reserved_size <= capacity())
+	{
+		return;
+	}
 	int* new_arr = new int[reserved_size];
 	for (int i = 0; i < fixed_size; i++)
 	{
@@ -84,9 +86,6 @@ void IntArray::reserve(size_t reserved_size)
 	delete[] int_array;
 	int_array = new_arr;
 	actual_size = reserved_size;
-
-
-
 }
 
 
@@ -99,14 +98,7 @@ void IntArray::push_back(int element) // append
 		{
 			actual_size++;
 		}
-		int* new_arr = new int[actual_size * 2];
-		for (int i = 0; i < fixed_size; i++)
-		{
-			new_arr[i] = int_array[i];
-		}
-		delete[] int_array;
-		int_array = new_arr;
-		actual_size *= 2;
+		reserve(actual_size * 2);
 	}
 	int_array[fixed_size] = element;
 	fixed_size++;
@@ -141,6 +133,10 @@ int& IntArray::operator[](int index)
 
 void IntArray::operator=(std::initializer_list<int> list)
 {
+	if (list.size() > actual_size)
+	{
+		reserve(list.size());
+	}
 	int i = 0;
 	for (auto& item : list)
 	{
@@ -158,13 +154,31 @@ int& IntArray::at(int index)
 	return int_array[index];
 }
 
-void IntArray::assign(int index, int item)
+void IntArray::assign(int count, int value)
 {
-	if (index >= size())
+	if (count > actual_size)
 	{
-		return;
+		reserve(count);
 	}
-	int_array[index] = item;
+	for (int i = 0; i < count; i++)
+	{
+		int_array[i] = value;
+	}
+	fixed_size = count;
+}
+
+void IntArray::assign(std::initializer_list<int> list)
+{
+	if (list.size() > actual_size)
+	{
+		reserve(list.size());
+	}
+	int i = 0;
+	for (auto& item : list)
+	{
+		int_array[i++] = item;
+	}
+	fixed_size = list.size();
 }
 
 
