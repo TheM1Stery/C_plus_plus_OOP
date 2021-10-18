@@ -2,6 +2,7 @@
 #include "IntArray.h"
 #include <random>
 #include <ctime>
+#include <vector>
 
 
 std::default_random_engine eng(time(nullptr));

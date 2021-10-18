@@ -53,10 +53,7 @@ int main()
 	print_array(arr);
 	*/
 	IntArray arr{1,2,3};
-	IntArray arr2(arr * 2);
-	print_array(arr2);
-	
-	
+	arr *= 100;
 	
 	
 
