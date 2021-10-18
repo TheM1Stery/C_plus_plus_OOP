@@ -59,11 +59,9 @@ int main()
 	/*IntArray arr{1,2,3,4,5,6,7};
 	print_array(arr);
 	*/
-	IntArray arr;
-	arr.assign(10, 0);
-	print_array(arr);
-
-
+	// IntArray arr;
+	// arr.assign(10, 0);
+	// print_array(arr);
 
 
 }
