@@ -2,6 +2,7 @@
 
 #include "human.h"
 #include "Vector.h"
+#include <string.h>
 class Flat
 {
     Vector<Human> residents;
@@ -22,7 +23,26 @@ public:
         residents.push_back(human);
     }
 
-    
+    void remove_resident(Human& human)
+    {
+        int index = -1;
+        for (int i = 0; i < residents.size(); i++)
+        {
+            if (!strcmp(residents[i].get_name(), human.get_name()))
+            {
+                index = i; 
+            }
+        }
+        if (index == -1)
+        {
+            return;
+        }
+        residents.erase(index);
+    }
+
+
+
+
 
     void build_balcony()
     {
@@ -31,7 +51,13 @@ public:
     void destroy_balcony()
     {
         balcony = false;
-    }    
+    }
+
+
+
+
+
+    
 
 
     

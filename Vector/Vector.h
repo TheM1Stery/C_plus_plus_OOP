@@ -113,7 +113,7 @@ public:
         }
         return false;
     }
-    void push_back(T element) // put the element to the end of the array
+    void push_back(T& element) // put the element to the end of the array
 	{
         if (capacity() == size())
         {
@@ -126,7 +126,22 @@ public:
         vector[fixed_size] = element;
         fixed_size++;
     }
-    void assign(int count, T value) // asssign values to the array
+
+    void push_back(T&& element) // put the element to the end of the array
+	{
+        if (capacity() == size())
+        {
+            if (capacity() == 0)
+            {
+                actual_size++;
+            }
+            reserve(actual_size * 2);
+        }
+        vector[fixed_size] = element;
+        fixed_size++;
+    }
+
+    void assign(int count, T& value) // asssign values to the array
 	{
         if (count > actual_size)
         {
@@ -138,6 +153,22 @@ public:
         }
         fixed_size = count;
     }
+
+
+    void assign(int count, T&& value) // asssign values to the array
+	{
+        if (count > actual_size)
+        {
+            reserve(count);
+        }
+        for (int i = 0; i < count; i++)
+        {
+            vector[i] = value;
+        }
+        fixed_size = count;
+    }
+
+
     void assign(std::initializer_list<T> list) // assign values to the array using initiliazer list
 	{
         if (list.size() > actual_size)
