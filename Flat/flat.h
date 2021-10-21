@@ -9,52 +9,45 @@ class Flat
     char* number_of_the_flat; // id
     int number_of_rooms; // number of rooms
     bool balcony; // is there a balcony in the flat
+    int floor;
 public:
     Flat();
-    Flat(const char* number_of_the_flat, int number_of_rooms, bool balcony);
+    Flat(std::initializer_list<Human> human,  char* number_of_the_flat, int number_of_rooms, bool balcony, int floor);
     Flat(const Flat& flat);
     
-    void add_resident(Human& human)
-    {
-        if (human.get_fathers_name() == nullptr || human.get_age() == 0 || human.get_name() == nullptr || human.get_surname() == nullptr)
-        {
-            return;
-        }
-        residents.push_back(human);
-    }
+    void add_resident(Human& human);
+    void remove_resident(Human& human);
+    
+    void set_number_of_rooms(int number);
+    int get_number_of_rooms();
 
-    void remove_resident(Human& human)
-    {
-        int index = -1;
-        for (int i = 0; i < residents.size(); i++)
-        {
-            if (!strcmp(residents[i].get_name(), human.get_name()))
-            {
-                index = i; 
-            }
-        }
-        if (index == -1)
-        {
-            return;
-        }
-        residents.erase(index);
-    }
+    int get_number_of_residents();
+
+    void print_residents();
+
+    void search_residents(const char* name);
+
+
+    const char* get_number_of_the_flat();
+
+    void set_number_of_the_flat(const char* number);
+    
+
+    int get_floor();
+
+    void set_floor(int floor);
 
 
 
 
+    void build_balcony();
 
-    void build_balcony()
-    {
-        balcony = true;
-    }
-    void destroy_balcony()
-    {
-        balcony = false;
-    }
+    void destroy_balcony();
+    
 
 
-
+    ~Flat();
+    
 
 
     

@@ -69,7 +69,7 @@ int Human::get_age()
 
 void Human::set_age(int age)
 {
-    if (age == 0)
+    if (age == 0 || this->age != 0)
     {
         return;
     }

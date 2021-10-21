@@ -47,7 +47,20 @@ public:
     }
 
 
-	
+    Vector& operator=(const Vector& arr)
+    {
+        delete[] vector;
+        vector = new T[arr.actual_size];
+        for (int i = 0; i < arr.fixed_size; i++)
+        {
+            vector[i] = arr.vector[i];
+        }
+        actual_size = arr.actual_size;
+        fixed_size = arr.fixed_size;
+        return *this;
+    }
+
+
 	size_t size()    // get the size of the Vector    (fixed_size)
 	{
         return fixed_size;
@@ -113,7 +126,7 @@ public:
         }
         return false;
     }
-    void push_back(T& element) // put the element to the end of the array
+    void push_back(const T& element) // put the element to the end of the array
 	{
         if (capacity() == size())
         {
