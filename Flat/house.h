@@ -6,7 +6,7 @@
 
 class House
 {
-    Vector<Flat> flats;
+    Vector<Flat*> flats;
     char* address_of_the_house;
     int number_of_floors;
     bool elevator; // is there a elevator in the house
@@ -15,7 +15,7 @@ class House
 
 public:
     House();
-    House(std::initializer_list<Flat> flat, const char* address_of_the_house, int number_of_floors, bool elevator);
+    House(std::initializer_list<Flat*> flat, const char* address_of_the_house, int number_of_floors, bool elevator);
     House(const House& house);
 
 
@@ -24,7 +24,7 @@ public:
     
     void set_address(const char* address);
 
-    int get_number_of_flats();
+    size_t get_number_of_flats();
         
     int get_number_of_floors();
 

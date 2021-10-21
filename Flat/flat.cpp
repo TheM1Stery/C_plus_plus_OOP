@@ -1,4 +1,4 @@
-#include "flat.h"
+﻿#include "flat.h"
 
 Flat::Flat() : number_of_rooms(0), balcony(false), floor(0)
 {
@@ -6,8 +6,9 @@ Flat::Flat() : number_of_rooms(0), balcony(false), floor(0)
 }
 
 
-Flat::Flat(std::initializer_list<Human> human,  char* number_of_the_flat, int number_of_rooms, bool balcony, int floor) : Flat()
+Flat::Flat(std::initializer_list<Human*> human,  const char* number_of_the_flat, int number_of_rooms, bool balcony, int floor)
 {
+    this->number_of_the_flat = new char[100];
     residents = human;
     strcpy_s(this->number_of_the_flat, 100, number_of_the_flat);
     this->number_of_rooms = number_of_rooms;
@@ -25,21 +26,32 @@ Flat::Flat(const Flat& flat)
     floor = flat.floor;
 }
 
-void Flat::add_resident(Human& human)
+void Flat::operator=(const Flat& flat)
 {
-    if (human.get_fathers_name() == nullptr || human.get_age() == 0 || human.get_name() == nullptr || human.get_surname() == nullptr)
+    delete[] number_of_the_flat;
+    number_of_the_flat = new char[100];
+    strcpy_s(number_of_the_flat, 100, flat.number_of_the_flat);
+    balcony = flat.balcony;
+    number_of_rooms = flat.number_of_rooms;
+    residents = flat.residents;
+    floor = flat.floor;
+}
+
+void Flat::add_resident(Human* human)
+{
+    if (human->get_fathers_name() == nullptr || human->get_age() == 0 || human->get_name() == nullptr || human->get_surname() == nullptr)
     {
         return;
     }
     residents.push_back(human);
 }
 
-void Flat::remove_resident(Human& human)
+void Flat::remove_resident(Human* human)
 {
     int index = -1;
     for (int i = 0; i < residents.size(); i++)
     {
-        if (!strcmp(residents[i].get_name(), human.get_name()))
+        if (!strcmp(residents[i]->get_name(), human->get_name()))
         {
             index = i; 
         }
@@ -105,16 +117,18 @@ void Flat::print_residents()
 {
     for (int i = 0; i < residents.size(); i++)
     {
-        std::cout << i + 1 << ". " << residents[i].get_name() << '\n';
+        std::cout << i + 1 << ". " << residents[i]->get_name() << '\n';
     }
 }
 
 void Flat::search_residents(const char* name)
 {
-    Vector<Human> humans;
+    Vector<Human*> humans;
+    
     for (int i = 0; i < residents.size(); i++)
     {
-        char* temp = strstr(residents[i].get_name(), name);
+        
+        const char* temp = strstr(residents[i]->get_name(), name);
         if (temp != nullptr)
         {
             humans.push_back(residents[i]);
@@ -123,8 +137,14 @@ void Flat::search_residents(const char* name)
 
     for (int i = 0; i < humans.size(); i++)
     {
-        std::cout << i + 1 << ". " << humans[i].get_name() << '\n';
+        std::cout << i + 1 << ". " << humans[i]->get_name() << '\n';
     }
+}
+
+
+int Flat::get_floor()
+{
+    return floor;
 }
 
 void Flat::set_floor(int floor)
@@ -136,7 +156,7 @@ void Flat::set_floor(int floor)
     this->floor = floor;
 }
 
-int Flat::get_number_of_residents()
+size_t Flat::get_number_of_residents()
 {
     return residents.size();
 }

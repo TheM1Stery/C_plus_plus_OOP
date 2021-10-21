@@ -40,7 +40,7 @@ void House::set_address(const char* address)
     strcpy_s(address_of_the_house, 100, address);
 }
 
-int House::get_number_of_flats()
+size_t House::get_number_of_flats()
 {
     return flats.size();
 }
@@ -67,6 +67,14 @@ void House::remove_elevator()
     elevator = false;
 }
 
+
+
+
+
+House::~House()
+{
+    delete[] address_of_the_house;
+}
 
 
 

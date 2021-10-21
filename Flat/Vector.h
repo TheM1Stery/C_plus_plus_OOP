@@ -25,9 +25,10 @@ public:
         }
 	    vector = new T[actual_size];
     } 
-	Vector(std::initializer_list<T> list)  // constructor with initliazer list
-    : actual_size(list.size()), fixed_size(list.size())
+	Vector(std::initializer_list<T> list)
     {
+        actual_size = list.size();
+        fixed_size = list.size();
         vector = new T[list.size()];
         int i = 0;
         for (auto& item : list)
@@ -126,6 +127,9 @@ public:
         }
         return false;
     }
+
+    
+
     void push_back(const T& element) // put the element to the end of the array
 	{
         if (capacity() == size())

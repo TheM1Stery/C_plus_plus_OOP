@@ -22,10 +22,10 @@ public:
     double get_area();
 
     double get_volume();
+    
+    int compare(Reservoir& compared_reservoir);
 
-    int compare(Reservoir& reservoir);
-
-    int compare_area(Reservoir& reservoir);
+    int compare_area(Reservoir& compared_reservoir);
 
     ~Reservoir();
 };

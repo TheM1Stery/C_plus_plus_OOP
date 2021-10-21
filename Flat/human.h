@@ -18,6 +18,11 @@ public:
     Human();
     Human(const char* name, const char* surname, const char* fathers_name, int age, GENDER gender);
     Human(const Human& human);
+    
+    void operator=(const Human& human);
+
+
+
 
     const char* get_name();
     void set_name(const char* name);
