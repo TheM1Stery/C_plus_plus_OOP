@@ -8,35 +8,43 @@ std::default_random_engine eng(time(nullptr));
 std::uniform_int_distribution<int> range(10, 100);
 
 
-void print_array(IntArray& arr)
+//void print_array(IntArray& arr)
+//{
+//	for (int i = 0; i < arr.size(); i++)
+//	{
+//		std::cout << arr[i] << ' ';
+//	}
+//	std::cout << '\n';
+//}
+
+std::ostream& operator << (std::ostream& stream, IntArray& arr)
 {
-	for (int i = 0; i < arr.size(); i++)
+	for (int i = 0; i < arr.fixed_size; i++)
 	{
-		std::cout << arr[i] << ' ';
+		stream << arr.int_array[i] << ' ';
 	}
-	std::cout << '\n';
+	stream << '\n';
+	return stream;
 }
 
-void selection_sort(IntArray& arr)
+std::istream& operator>>(std::istream& stream, IntArray& arr)
 {
-	if (arr.empty())
+	int count;
+	std::cout << "How many elements will you add\n> ";
+	stream >> count;
+	if (arr.actual_size < arr.fixed_size + count)
 	{
-		return;
+		arr.reserve(count);
 	}
-	for (int i = 0; i < arr.size() - 1; i++)
+	arr.fixed_size += count;
+	for (int i = 0; i < count; i++)
 	{
-		int temp = i;
-		for (int j = i + 1; j < arr.size(); j++)
-		{
-			if (arr[j] < arr[temp])
-			{
-				temp = j;
-			}
-		}
-		std::swap(arr[i], arr[temp]);
+		stream >> arr.int_array[i];
 	}
-
+	return stream;
 }
+
+
 
 
 
@@ -52,8 +60,21 @@ int main()
 	/*IntArray arr{1,2,3,4,5,6,7};
 	print_array(arr);
 	*/
-	IntArray arr{1,2,3};
-	arr *= 100;
+	
+	IntArray arr;
+	std::cin >> arr;
+	arr *= 5;
+	std::cout << arr;
+	IntArray arr2 = arr * 2;
+	std::cout << arr2;
+	IntArray arr3 = arr + arr2;
+	std::cout << arr3;
+	arr3 += arr2;
+	std::cout << arr3;
+	
+	
+	
+	
 	
 	
 

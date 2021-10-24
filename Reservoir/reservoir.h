@@ -21,18 +21,18 @@ public:
 
     Reservoir& operator=(const Reservoir& reservoir);
 
-    const char* get_name();
+    const char* get_name() const;
 
-    const char* get_type();
+    const char* get_type() const;
 
 
-    double get_area();
+    double get_area() const;
 
-    double get_volume();            
+    double get_volume() const;            
 
-    int compare_name(Reservoir& compared_reservoir);
+    int compare_name(Reservoir& compared_reservoir) const;
 
-    int compare_area(Reservoir& compared_reservoir);
+    int compare_area(Reservoir& compared_reservoir) const;
 
     ~Reservoir();
 };

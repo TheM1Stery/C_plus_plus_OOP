@@ -13,7 +13,7 @@ Reservoir::Reservoir()
     strcpy_s(type, 100, "Pond");
 }
 
-Reservoir::Reservoir(const char* name, const char* type, double depth, double width, double area) : Reservoir()
+Reservoir::Reservoir(const char* name, const char* type, double depth, double width, double length) : Reservoir()
 {
     this->depth = depth;
     this->width = width;
@@ -33,46 +33,54 @@ Reservoir::Reservoir(const Reservoir& reservoir)
     length = reservoir.length;
     area = reservoir.area;
     volume = reservoir.volume;
+    strcpy_s(name, 100, reservoir.name);
+    strcpy_s(type, 100, reservoir.type);
+    
 }
 
 Reservoir& Reservoir::operator=(const Reservoir& reservoir)
 {
     delete[] name;
     delete[] type;
+    name = new char[100];
+    type = new char[100];
     depth = reservoir.depth;
     width = reservoir.width;
     length = reservoir.length;
     area = reservoir.area;
     volume = reservoir.volume;
+    strcpy_s(name, 100, reservoir.name);
+    strcpy_s(type, 100, reservoir.type);
+    return *this;
 }
 
-const char* Reservoir::get_name()
+const char* Reservoir::get_name() const
 {
     return name;
 }
 
-const char* Reservoir::get_type()
+const char* Reservoir::get_type() const
 {
     return type;
 }
 
-double Reservoir::get_area()
+double Reservoir::get_area() const
 {
     return area; 
 }
 
-double Reservoir::get_volume()
+double Reservoir::get_volume() const
 {
     return volume;
 }
 
 
-int Reservoir::compare_name(Reservoir& reservoir)
+int Reservoir::compare_name(Reservoir& reservoir) const
 {
     return strcmp(name, reservoir.name);
 }
 
-int Reservoir::compare_area(Reservoir& reservoir)
+int Reservoir::compare_area(Reservoir& reservoir) const
 {
     if (area > reservoir.get_area())
     {

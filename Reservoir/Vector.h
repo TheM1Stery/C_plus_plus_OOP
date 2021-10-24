@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
-
-#include "reservoir.h"
+#include <cstring>
 #include <initializer_list>
 
 template<typename T> class Vector
@@ -15,6 +14,7 @@ public:
         actual_size = 0;
         fixed_size = 0;
         vector = new T[actual_size];
+
     }
     Vector(size_t actual_size)
         : actual_size(actual_size), fixed_size(0)   // constructor which reserves memory
@@ -34,10 +34,11 @@ public:
         int i = 0;
         for (auto& item : list)
         {
-            vector[i++] = item;
+            vector[i] = item;
+            i++;
         }
     }
-    Vector(const Vector& arr) // Copy constructor
+    explicit Vector(const Vector& arr) // Copy constructor
     {
         vector = new T[arr.actual_size];
         for (int i = 0; i < arr.fixed_size; i++)
@@ -63,11 +64,11 @@ public:
     }
 
 
-    size_t size()    // get the size of the Vector    (fixed_size)
+    size_t size() const   // get the size of the Vector    (fixed_size)
     {
         return fixed_size;
     }
-    size_t capacity() // get the capacity of the Vector  (actual_size)
+    size_t capacity() const // get the capacity of the Vector  (actual_size)
     {
         return actual_size;
     }
@@ -97,6 +98,13 @@ public:
     {
         return vector[index];
     }
+
+    const T& operator[](int index) const
+    {
+        return vector[index];
+    }
+
+
     void operator=(std::initializer_list<T> list) // reassign the values of the array using initiliazer list
     {
         if (list.size() > actual_size)
@@ -249,12 +257,31 @@ public:
 
         if (index == -1)
         {
-            return;
+            throw;
         }
         
         return operator[](index);
     }
     
+
+    const T& operator[] (const char* name) const
+    {
+        int index = -1;
+        for (int i = 0; i < size(); i++)
+        {
+            if (!strcmp(name, vector[i].get_name()))
+            {
+                index = i;
+            }
+        }
+
+        if (index == -1)
+        {
+            throw;
+        }
+
+        return operator[](index);
+    }
 
 
 

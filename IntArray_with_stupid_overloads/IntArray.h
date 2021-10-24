@@ -7,11 +7,15 @@ class IntArray
 	size_t fixed_size; // the size which the user gets
 	int* int_array;
 public:
+
+	friend std::ostream& operator <<(std::ostream& stream, IntArray& arr);
+	friend std::istream& operator >> (std::istream& stream, IntArray& arr);
+
 	IntArray(); // default constructor
 	IntArray(int actual_size); // constructor which reserves memory
 	IntArray(std::initializer_list<int> list); // constructor with initliazer list
 	IntArray(const IntArray& arr); // Copy constructor
-
+	
 
 
 

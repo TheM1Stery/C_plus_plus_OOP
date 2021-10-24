@@ -7,7 +7,7 @@ House::House() : number_of_floors(0), elevator(0)
     address_of_the_house = new char[100];
 }
 
-House::House(std::initializer_list<Flat> flats, const char* address_of_the_house, int number_of_floors, bool elevator)
+House::House(std::initializer_list<Flat*> flats, const char* address_of_the_house, int number_of_floors, bool elevator)
 : House()
 {
     this->flats = flats;
