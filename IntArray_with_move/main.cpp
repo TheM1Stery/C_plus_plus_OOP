@@ -1,11 +1,6 @@
 #include <iostream>
 #include "IntArray.h"
-#include <random>
-#include <ctime>
-
-
-std::default_random_engine eng(time(nullptr));
-std::uniform_int_distribution<int> range(10, 100);
+#include <vector>
 
 
 //void print_array(IntArray& arr)
@@ -60,11 +55,23 @@ int main()
 	/*IntArray arr{1,2,3,4,5,6,7};
 	print_array(arr);
 	*/
+
+
 	
-	IntArray arr{1,2,3};
-	IntArray arr2{1,2,3,4};
-	IntArray arr3 = arr + arr2;
-	std::cout << arr3;
+		IntArray arr{ 1,2,3 };
+		std::cout << arr[0] << '\n';
+
+		arr(3);
+		std::cout << arr;
+		IntArray arr2;
+		arr2 = std::move(arr);
+
+		IntArray arr3;
+		arr3 = arr2;
+	
+	
+	
+	
 	
 	
 	

@@ -51,7 +51,22 @@ public:
     }
 
 
-    Vector& operator=(const Vector& arr)
+    Vector(Vector&& arr) // Move constructor
+    {
+        vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        for (int i = 0; i < arr.fixed_size; i++)
+        {
+            vector[i] = std::move(arr.vector[i]);
+        }
+        fixed_size = arr.fixed_size;
+        actual_size = arr.actual_size;
+
+        arr.actual_size = 0;
+        arr.fixed_size = 0;
+    }
+
+
+    Vector& operator=(const Vector& arr) // copy assignment
     {
         ::operator delete[](vector);
         //vector = new T[arr.actual_size];
@@ -63,6 +78,21 @@ public:
         actual_size = arr.actual_size;
         fixed_size = arr.fixed_size;
         return *this;
+    }
+
+    Vector& operator = (Vector&& arr) // move assignment
+    {
+        ::operator delete[](vector);
+        vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        for (int i = 0; i < arr.fixed_size; i++)
+        {
+            vector[i] = std::move(arr.vector[i]);
+        }
+        fixed_size = arr.fixed_size;
+        actual_size = arr.actual_size;
+
+        arr.actual_size = 0;
+        arr.fixed_size = 0;
     }
 
 
@@ -92,7 +122,7 @@ public:
         T* new_arr = static_cast<T*>(::operator new[](reserved_size * sizeof(T)));
         for (int i = 0; i < fixed_size; i++)
         {
-            new_arr[i] = vector[i];
+            new_arr[i] = std::move(vector[i]);
         }
         ::operator delete[](vector);
         vector = new_arr;
@@ -133,7 +163,7 @@ public:
         }
         return false;
     }
-    void push_back(T& element) // put the element to the end of the array
+    void push_back(const T& element) // put the element to the end of the array
     {
         if (capacity() == size())
         {
@@ -157,7 +187,7 @@ public:
             }
             reserve(actual_size * 2);
         }
-        vector[fixed_size] = element;
+        vector[fixed_size] = std::move(element);
         fixed_size++;
     }
 
@@ -221,7 +251,7 @@ public:
         }
         fixed_size--;
     }
-    ~Vector()
+    ~Vector() // destructor
     {
         ::operator delete[](vector);
     }
