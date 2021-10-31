@@ -87,7 +87,6 @@ String::String(size_t count, char r)
 
 String::String(size_t size)
 {
-    m_length = 0;
     m_capacity = size > 15 ? size : 15;
     string = static_cast<char*>(::operator new[](m_capacity));
 }
@@ -259,7 +258,7 @@ int String::compare(const String& str2) const
             return this->string[i] > str2.string[i] ? 1 : -1;
         }
     }
-    return 0;
+    return 0;     
 }
 
 bool String::operator>(const String& str2)const
@@ -417,7 +416,7 @@ void String::erase(size_t st_index, size_t end_index)
 char* String::data() const
 {
     char* copy_str = string;
-    
+    copy_str[m_length] = '\0';
     return copy_str;
 }
 
@@ -441,7 +440,20 @@ size_t String::find(const String& str) const
     const char* str2 = str.data();
     for (int i = 0; i < m_length; i++)
     {
-        if (*str1 == *str2 && !(strcmp(str1, str2)))
+        bool flag = false;
+        for (int j = 0; j < str.size(); j++)
+        {
+            if (str1[j] == str2[j])
+            {
+                flag = true;
+            }
+            else
+            {
+                flag = false;
+                break;
+            }
+        }
+        if (flag)
         {
             return i;
         }
