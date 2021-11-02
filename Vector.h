@@ -20,7 +20,7 @@ public:
         actual_size = 0;
         fixed_size = 0;
         //vector = new T[actual_size];
-        vector = static_cast<T*>(::operator new[](actual_size));
+        vector = nullptr;
     }
     Vector(size_t actual_size)
         : actual_size(actual_size), fixed_size(0)   // constructor which reserves memory
@@ -66,7 +66,7 @@ public:
 
         arr.actual_size = 0;
         arr.fixed_size = 0;
-        arr.vector = static_cast<T*>(::operator new[](0));
+        arr.vector = nullptr;
     }
 
 
@@ -99,7 +99,7 @@ public:
 
         arr.actual_size = 0;
         arr.fixed_size = 0;
-        arr.vector = static_cast<T*>(::operator new[](0));
+        arr.vector = nullptr;
     }
 
 
