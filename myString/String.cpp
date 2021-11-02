@@ -437,13 +437,12 @@ size_t String::find(char chr) const
 size_t String::find(const String& str) const
 {
     const char* str1 = data();
-    const char* str2 = str.data();
     for (int i = 0; i < m_length; i++)
     {
         bool flag = false;
         for (int j = 0; j < str.size(); j++)
         {
-            if (str1[j] == str2[j])
+            if (str1[j] == str.string[j])
             {
                 flag = true;
             }

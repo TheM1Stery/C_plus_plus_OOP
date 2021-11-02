@@ -2,6 +2,10 @@
 #include <iostream>
 #include <initializer_list>
 
+
+
+
+
 template<typename T> class Vector
 {
     size_t actual_size; // the size that array actually has
@@ -53,16 +57,13 @@ public:
 
     Vector(Vector&& arr) // Move constructor
     {
-        vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
-        for (int i = 0; i < arr.fixed_size; i++)
-        {
-            vector[i] = std::move(arr.vector[i]);
-        }
+        vector = arr.vector;
         fixed_size = arr.fixed_size;
         actual_size = arr.actual_size;
 
         arr.actual_size = 0;
         arr.fixed_size = 0;
+        arr.vector = static_cast<T*>(::operator new[](0));
     }
 
 
@@ -83,16 +84,19 @@ public:
     Vector& operator = (Vector&& arr) // move assignment
     {
         ::operator delete[](vector);
-        vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
-        for (int i = 0; i < arr.fixed_size; i++)
+        //vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        /*for (int i = 0; i < arr.fixed_size; i++)
         {
             vector[i] = std::move(arr.vector[i]);
-        }
+        }*/
+
+        vector = arr.vector;
         fixed_size = arr.fixed_size;
         actual_size = arr.actual_size;
 
         arr.actual_size = 0;
         arr.fixed_size = 0;
+        arr.vector = static_cast<T*>(::operator new[](0));
     }
 
 
@@ -189,6 +193,21 @@ public:
         }
         vector[fixed_size] = std::move(element);
         fixed_size++;
+    }
+
+
+    template<typename... args> T& emplace_back(args&&... argss)
+    {
+        if (capacity() == size())
+        {
+            if (capacity() == 0)
+            {
+                actual_size++;
+            }
+            reserve(actual_size * 2);
+        }
+        vector[fixed_size] = T(std::forward<args>(argss)...);
+        return vector[fixed_size++];
     }
 
     void assign(int count, T& value) // asssign values to the array
