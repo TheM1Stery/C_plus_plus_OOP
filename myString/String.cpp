@@ -108,14 +108,15 @@ String::String(String&& cp_string)
 {
     m_capacity = cp_string.m_capacity;
     m_length = cp_string.m_length;
-    string = static_cast<char*>(::operator new[](m_capacity));
+    // string = static_cast<char*>(::operator new[](m_capacity));
 
-    for (size_t i = 0; i < m_length; i++)
-    {
-        string[i] = std::move(cp_string.string[i]);
-    }
+    // for (size_t i = 0; i < m_length; i++)
+    // {
+    //     string[i] = std::move(cp_string.string[i]);
+    // }
+    string = cp_string.string;
 
-
+    cp_string.string = static_cast<char*>(::operator new[](0));
     cp_string.m_capacity = 0;
     cp_string.m_length = 0;
 }
