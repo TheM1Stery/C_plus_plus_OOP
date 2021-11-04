@@ -100,6 +100,7 @@ public:
         arr.actual_size = 0;
         arr.fixed_size = 0;
         arr.vector = nullptr;
+        return *this;
     }
 
 

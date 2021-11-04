@@ -1,6 +1,8 @@
 #pragma once
 #include <stdexcept>
 #include <cstddef>
+#include "Vector.h"
+#include <initializer_list>
 template<typename LinkedList> class LinkedListIterator
 {
 
@@ -39,13 +41,15 @@ public:
         return list;
     }
 
+    
+
 
     Type& operator*()
     {
         return (*node).value;
     }
 
-    Type& operator + (int count)
+    NodePointer operator + (int count)
     {
         NodePointer temp = node;
         for (int i = 0; i < count && temp != nullptr; i++)
@@ -56,7 +60,7 @@ public:
         {
             throw std::out_of_range("out of range");
         }
-        return (*temp).value;
+        return temp;
     }
 
 
@@ -91,6 +95,20 @@ public:
     using Type = T;
     using Iterator = LinkedListIterator<LinkedList<T>>;
     LinkedList() : head(nullptr), tail(nullptr), m_length(0) {}
+
+    
+    LinkedList(const Vector<T>& vec)
+    {
+        
+        head = nullptr;
+        tail = nullptr;
+        for (auto& item : vec)
+        {
+            push_back(item);
+        }
+
+        m_length = vec.size();
+    }
 
     LinkedList(const LinkedList& list)
     {
@@ -137,6 +155,7 @@ public:
 
     LinkedList& operator =(LinkedList&& list) 
     {
+        this->~LinkedList();
         m_length = list.m_length;
         head = list.head;
         tail = list.tail;
@@ -234,12 +253,29 @@ public:
     }
 
 
-    //LinkedList& operator + (const LinkedList& list)
-    //{
-    //    LinkedList copy(*this);
-    //    
-    //    return copy;
-    //}
+    LinkedList operator + (const LinkedList& list)
+    {
+        LinkedList copy(*this);
+        
+        for (auto& item : list)
+        {
+            copy.push_back(item);
+        }
+        return copy;
+    }
+
+
+
+    LinkedList& operator += (const LinkedList& list)
+    {
+        for (auto& item : list)
+        {
+            this->push_back(item);
+        }
+        return *this;
+    }
+
+
 
     
 
@@ -261,6 +297,24 @@ public:
             temp = temp->next;
         }
     }*/
+
+
+    void reverse()
+    {
+        Node* current = head;
+        while (current != nullptr)
+        {
+            /*Node* temp = current->prev;
+            current->prev = current->next;
+            current->next = temp;*/
+            std::swap(current->prev, current->next);
+            current = current->prev;
+        }
+
+        std::swap(head, tail);
+    }
+
+
 
     size_t length()
     {
