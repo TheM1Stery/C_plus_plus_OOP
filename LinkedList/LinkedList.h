@@ -3,15 +3,17 @@
 #include <cstddef>
 #include "Vector.h"
 #include <initializer_list>
+template<typename T>class LinkedList;
+
 template<typename LinkedList> class LinkedListIterator
 {
 
 public:
     using Type = typename LinkedList::Type;
     using NodePointer = typename LinkedList::Node*;
-    LinkedListIterator(NodePointer node) : node(node)
-    {
-    }
+    template<typename T> friend class ::LinkedList;
+    LinkedListIterator(NodePointer node) : node(node) {}
+
 
 
     LinkedListIterator& operator++()
@@ -28,6 +30,8 @@ public:
     }
 
 
+
+
     LinkedListIterator& operator--()
     {
         node = node->prev;
@@ -41,7 +45,7 @@ public:
         return list;
     }
 
-    
+
 
 
     Type& operator*()
@@ -49,22 +53,28 @@ public:
         return (*node).value;
     }
 
-    NodePointer operator + (int count)
+
+    const Type& operator*() const
     {
-        NodePointer temp = node;
-        for (int i = 0; i < count && temp != nullptr; i++)
-        {
-            temp = temp->next;
-        }
-        if (temp == nullptr)
-        {
-            throw std::out_of_range("out of range");
-        }
-        return temp;
+        return node->value;
     }
 
+    /* NodePointer operator + (int count)
+     {
+         NodePointer temp = node;
+         for (int i = 0; i < count && temp != nullptr; i++)
+         {
+             temp = temp->next;
+         }
+         if (temp == nullptr)
+         {
+             throw std::out_of_range("out of range");
+         }
+         return temp;
+     }*/
 
-    bool operator==(const LinkedListIterator& it) const 
+
+    bool operator==(const LinkedListIterator& it) const
     {
         return node == it.node;
     }
@@ -73,9 +83,96 @@ public:
     {
         return !(node == it.node);
     }
+
+
+
+
+
+
+private:
+    NodePointer node;
+    NodePointer operator->()
+    {
+        return node;
+    }
+    operator NodePointer()
+    {
+        return node;
+    }
+};
+
+
+template<typename LinkedList> class LinkedListConstIterator
+{
+
+public:
+    using Type = typename LinkedList::Type;
+    using NodePointer = typename LinkedList::Node*;
+
+
+    LinkedListConstIterator(NodePointer node) : node(node) {}
+
+
+
+    LinkedListConstIterator& operator++()
+    {
+        node = node->next;
+        return *this;
+    }
+
+    LinkedListConstIterator operator++(int)
+    {
+        LinkedListConstIterator list(*this);
+        ++(*this);
+        return list;
+    }
+
+
+
+
+    LinkedListConstIterator& operator--()
+    {
+        node = node->prev;
+        return *this;
+    }
+
+    LinkedListConstIterator operator--(int)
+    {
+        LinkedListConstIterator list(*this);
+        --(*this);
+        return list;
+    }
+
+
+
+
+    const Type& operator*()
+    {
+        if (node == nullptr)
+        {
+            throw;
+        }
+        return node->value;
+    }
+
+
+    bool operator==(const LinkedListConstIterator& it)
+    {
+        return node == it.node;
+    }
+
+    bool operator!=(const LinkedListConstIterator& it)
+    {
+        return !(node == it.node);
+    }
+
+
+
+
 private:
     NodePointer node;
 };
+
 
 
 
@@ -91,23 +188,37 @@ template<typename T>class LinkedList
     Node* tail;
     size_t m_length;
     template<typename R> friend class LinkedListIterator;
+    template<typename C> friend class LinkedListConstIterator;
 public:
     using Type = T;
-    using Iterator = LinkedListIterator<LinkedList<T>>;
+    using Iterator = LinkedListIterator<LinkedList>;
+    using ConstIterator = LinkedListConstIterator<LinkedList>;
     LinkedList() : head(nullptr), tail(nullptr), m_length(0) {}
 
-    
-    LinkedList(const Vector<T>& vec)
+
+
+    LinkedList(std::initializer_list<int> list)
     {
-        
+        m_length = 0;
         head = nullptr;
         tail = nullptr;
+        for (auto& item : list)
+        {
+            push_back(item);
+        }
+    }
+
+    LinkedList(const Vector<T>& vec)
+    {
+        m_length = 0;
+        head = nullptr;
+        tail = nullptr;
+
         for (auto& item : vec)
         {
             push_back(item);
         }
 
-        m_length = vec.size();
     }
 
     LinkedList(const LinkedList& list)
@@ -119,7 +230,7 @@ public:
         {
             push_back(item);
         }
-        
+
     }
 
     LinkedList(LinkedList&& list)
@@ -149,11 +260,11 @@ public:
         {
             push_back(item);
         }
-        
+
         return *this;
     }
 
-    LinkedList& operator =(LinkedList&& list) 
+    LinkedList& operator =(LinkedList&& list)
     {
         this->~LinkedList();
         m_length = list.m_length;
@@ -169,7 +280,7 @@ public:
 
 
 
-    void push_back(T& value)
+    void push_back(const T& value)
     {
         if (m_length == 0)
         {
@@ -214,7 +325,7 @@ public:
     }
 
 
-    void push_front(T& value)
+    void push_front(const T& value)
     {
         if (m_length == 0)
         {
@@ -253,10 +364,37 @@ public:
     }
 
 
+    void pop_back()
+    {
+        if (m_length == 0)
+        {
+            return;
+        }
+        Node* temp = tail->prev;
+        delete tail;
+        tail = temp;
+        tail->next = nullptr;
+        m_length--;
+    }
+
+    void pop_front()
+    {
+        if (m_length == 0)
+        {
+            return;
+        }
+        Node* temp = head->next;
+        delete head;
+        head = temp;
+        temp->prev = nullptr;
+        m_length--;
+    }
+
+
     LinkedList operator + (const LinkedList& list)
     {
         LinkedList copy(*this);
-        
+
         for (auto& item : list)
         {
             copy.push_back(item);
@@ -277,26 +415,30 @@ public:
 
 
 
-    
 
 
-    /*T& operator[](int index)  Please use iterators
+
+    T& operator[](int index)
     {
-        if (index >= m_length)
-        {
-            throw std::out_of_range("access out of range");
-        }
-        Node* temp = head;
-        for (int i = 0; i < m_length; i++)
-        {
+        Iterator it = begin();
 
-            if (i == index)
-            {
-                return (*temp).value;
-            }
-            temp = temp->next;
+        for (int i = 0; i < index; i++)
+        {
+            it++;
         }
-    }*/
+        return *it;
+    }
+
+    const T& operator[](int index) const
+    {
+        ConstIterator it = begin();
+
+        for (int i = 0; i < index; i++)
+        {
+            it++;
+        }
+        return *it;
+    }
 
 
     void reverse()
@@ -321,15 +463,95 @@ public:
         return m_length;
     }
 
-    Iterator begin() const
+    Iterator begin()
     {
         return head;
     }
 
-    Iterator end() const
+    Iterator end()
     {
         return nullptr;
     }
+
+    ConstIterator cbegin()
+    {
+        return head;
+    }
+
+    ConstIterator cend()
+    {
+        return nullptr;
+    }
+
+    ConstIterator begin() const
+    {
+        return head;
+    }
+
+    ConstIterator end() const
+    {
+        return nullptr;
+    }
+
+    Iterator insert(Iterator it, const T& value)
+    {
+        Node* old_next = it->next;
+        it->next = new Node;
+        it->next->value = value;
+        it->next->prev = it;
+        it->next->next = old_next;
+        if (static_cast<Node*>(it) == tail)
+        {
+            tail = it->next;
+        }
+        return it->next;
+    }
+
+    Iterator insert(Iterator it, T&& value)
+    {
+        Node* old_next = it->next;
+        it->next = new Node;
+        it->next->value = value;
+        it->next->prev = it;
+        it->next->next = old_next;
+        if (static_cast<Node*>(it) == tail)
+        {
+            tail = it->next;
+        }
+        m_length++;
+        return it->next;
+    }
+
+    Iterator erase(Iterator it)
+    {
+       
+        if (it->prev != nullptr)
+        {
+            it->prev->next = it->next;
+        }
+        if (it->next != nullptr)
+        {
+            it->next->prev = it->prev;
+        }
+        if (static_cast<Node*>(it) == head)
+        {
+            head = it->next;
+        }
+        if (static_cast<Node*>(it) == tail)
+        {
+            tail = it->prev;
+        }
+        Node* res = it->next;
+        delete it;
+        m_length--;
+        return res;
+
+    }
+
+
+
+
+
 
     /*Iterator rbegin()
     {

@@ -244,6 +244,14 @@ String String::substr(size_t pos, size_t end)
 
 int String::compare(const String& str2) const
 {
+    
+    for (size_t i = 0; i < this->m_length; i++)
+    {
+        if (this->string[i] != str2.string[i])
+        {
+            return this->string[i] > str2.string[i] ? 1 : -1;
+        }
+    }
     if (this->m_length > str2.m_length)
     {
         return 1;
@@ -251,13 +259,6 @@ int String::compare(const String& str2) const
     if (this->m_length < str2.m_length)
     {
         return -1;
-    }
-    for (size_t i = 0; i < this->m_length; i++)
-    {
-        if (this->string[i] != str2.string[i])
-        {
-            return this->string[i] > str2.string[i] ? 1 : -1;
-        }
     }
     return 0;     
 }

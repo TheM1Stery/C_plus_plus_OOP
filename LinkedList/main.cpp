@@ -1,7 +1,9 @@
 #include <iostream>
 #include "LinkedList.h"
+#include "Vector.h"
+#include <list>
 
-void print_all_nodes(LinkedList<int>& list)
+void print_all_nodes(const LinkedList<int>& list)
 {
 	for (auto& item : list)
 	{
@@ -9,6 +11,24 @@ void print_all_nodes(LinkedList<int>& list)
 	}
 	std::cout << '\n';
 }
+
+void advance(LinkedList<int>::Iterator& it, int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		++it;
+	}
+}
+
+void prev(LinkedList<int>::Iterator& it, int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		--it;
+	}
+}
+
+
 
 int main()
 {
@@ -26,33 +46,50 @@ int main()
 
 		list2 = std::move(list);
 	}*/
-	
+
 	/*LinkedList<int> list({ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 });
 	std::cout << list.begin().operator*();
 	list.reverse();*/
 	
-	LinkedList<int> list({1,2,3,4,5,6,7});
-    list.push_back(10);
-	list.push_back(20);
-    list.push_back(30);
-    list.push_back(40);
-	list.push_back(50);
-    list.push_back(60);
-    list.push_back(70);
-	list.push_back(80);
-    list.push_back(90);
-	print_all_nodes(list);
-	
-	print_all_nodes(list);
-
-	print_all_nodes(list);
-
-	print_all_nodes(list);
-
-	print_all_nodes(list);
 
 	
 	
-	
+	/*it = list.insert(it, 30);
 
+	print_all_nodes(list);*/
+
+	
+	LinkedList<int> list{ 1,2,3,4,5,6,7 };
+
+	print_all_nodes(list);
+
+	/*LinkedList<int>::Iterator it = list.begin();
+	advance(it, list.length() - 1);*/
+	/*it = list.insert(it, 20);
+
+	print_all_nodes(list);
+
+	it = list.insert(it, 30);
+	print_all_nodes(list);
+	advance(it, 3);
+	it = list.insert(it, 70);
+	print_all_nodes(list);
+	it = list.erase(it);
+	std::cout << *it << '\n';
+	print_all_nodes(list);
+	it = list.erase(it);
+	std::cout << *it << '\n';
+	print_all_nodes(list);*/
+
+
+
+	list.pop_front();
+	print_all_nodes(list);
+
+	
+	
+	
+	
+	 
+	
 }

@@ -10,8 +10,8 @@ int main()
 {
     
 
-    String my_str = "Hello world";
-    String my_str2 = "Jello world";
+    String my_str = "Bello world";
+    String my_str2 = "Aello world";
     /*std::cout << my_str + "\n";
     std::cout << my_str.compare(my_str2) << '\n';
     my_str.append(" and my friends");
@@ -23,8 +23,9 @@ int main()
     {
         std::cout << "higher";
     }*/
-    String my_str3 = "world";
-    std::cout << my_str.find(my_str3);
-    
+    if(my_str2 > my_str)
+    {
+        std::cout << "Higher";
+    }
 
 }
