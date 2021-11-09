@@ -197,7 +197,7 @@ public:
 
 
 
-    LinkedList(std::initializer_list<int> list)
+    LinkedList(std::initializer_list<T> list)
     {
         m_length = 0;
         head = nullptr;
@@ -541,7 +541,7 @@ public:
         {
             tail = it->prev;
         }
-        Node* res = it->next;
+        Node* res = it->prev;
         delete it;
         m_length--;
         return res;

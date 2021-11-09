@@ -63,15 +63,13 @@ int main()
 
 	print_all_nodes(list);
 
-	/*LinkedList<int>::Iterator it = list.begin();
-	advance(it, list.length() - 1);*/
-	/*it = list.insert(it, 20);
+	LinkedList<int>::Iterator it = list.begin();
+	advance(it, list.length() - 1);
+	it = list.insert(it, 20);
 
 	print_all_nodes(list);
-
 	it = list.insert(it, 30);
 	print_all_nodes(list);
-	advance(it, 3);
 	it = list.insert(it, 70);
 	print_all_nodes(list);
 	it = list.erase(it);
@@ -79,12 +77,13 @@ int main()
 	print_all_nodes(list);
 	it = list.erase(it);
 	std::cout << *it << '\n';
-	print_all_nodes(list);*/
-
-
-
-	list.pop_front();
 	print_all_nodes(list);
+	
+	
+
+
+
+	
 
 	
 	
