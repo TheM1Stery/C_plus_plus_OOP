@@ -8,6 +8,47 @@
 //}
 
 
+template<typename Vector> class VectorIterator
+{
+public:
+    using Type = typename Vector::Type;
+
+    VectorIterator(Type* iterator) : iterator(iterator) {}
+
+    VectorIterator& operator ++()
+    {
+        iterator++;
+
+        return *this;
+    }
+
+    VectorIterator& operator ++(int)
+    {
+        VectorIterator copy(*this);
+        ++(*this);
+        return copy;
+    }
+
+    Type& operator *()
+    {
+        return *iterator;
+    }
+
+    bool operator==(const VectorIterator& copy)
+    {
+        return iterator == copy.iterator;
+    }
+
+    bool operator!=(const VectorIterator& copy)
+    {
+        return iterator != copy.iterator;
+    }
+
+private:
+    Type* iterator;
+};
+
+
 
 template<typename T> class Vector
 {
@@ -15,6 +56,11 @@ template<typename T> class Vector
     size_t fixed_size; // the size which the user gets
     T* vector;
 public:
+
+    using Type = T;
+    using Iterator = VectorIterator<Vector>;
+
+
     Vector() // default constructor 
     {
         actual_size = 0;
@@ -30,17 +76,21 @@ public:
             this->actual_size = 0;
             //vector = new T[this->actual_size];
             vector = static_cast<T*>(::operator new[](this->actual_size * sizeof(T)));
+            memset(vector, 0, this->actual_size * sizeof(T));
             return;
         }
         vector = static_cast<T*>(::operator new[](actual_size));
+        memset(vector, 0, this->actual_size * sizeof(T));
+
     }
     Vector(std::initializer_list<T> list)  // constructor with initliazer list
         : actual_size(list.size()), fixed_size(list.size())
     {
         //vector = new T[list.size()];
         vector = static_cast<T*>(::operator new[](list.size() * sizeof(T)));
+        memset(vector, 0, list.size() * sizeof(T));
         int i = 0;
-        for (auto& item : list)
+        for (const auto& item : list)
         {
             vector[i++] = item;
         }
@@ -49,6 +99,7 @@ public:
     {
         //vector = new T[arr.actual_size];
         vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        memset(vector, 0, arr.actual_size * sizeof(T));
         for (int i = 0; i < arr.fixed_size; i++)
         {
             vector[i] = arr.vector[i];
@@ -75,6 +126,9 @@ public:
         ::operator delete[](vector);
         //vector = new T[arr.actual_size];
         vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        memset(vector, 0, arr.actual_size * sizeof(T));
+
+        memset(vector, 0, arr.actual_size * sizeof(T));
         for (int i = 0; i < arr.fixed_size; i++)
         {
             vector[i] = arr.vector[i];
@@ -104,11 +158,11 @@ public:
     }
 
 
-    size_t size()    // get the size of the Vector    (fixed_size)
+    size_t size() const   // get the size of the Vector    (fixed_size)
     {
         return fixed_size;
     }
-    size_t capacity() // get the capacity of the Vector  (actual_size)
+    size_t capacity() const    // get the capacity of the Vector  (actual_size)
     {
         return actual_size;
     }
@@ -119,6 +173,7 @@ public:
             ::operator delete[](vector);
             //vector = new T[reserved_size];
             vector = static_cast<T*>(::operator new[](reserved_size * sizeof(T)));
+            memset(vector, 0, reserved_size * sizeof(T));
             actual_size = reserved_size;
             return;
         }
@@ -128,6 +183,7 @@ public:
         }
         //T* new_arr = new T[reserved_size];
         T* new_arr = static_cast<T*>(::operator new[](reserved_size * sizeof(T)));
+        memset(new_arr, 0, reserved_size * sizeof(T));
         for (int i = 0; i < fixed_size; i++)
         {
             new_arr[i] = std::move(vector[i]);
@@ -137,6 +193,11 @@ public:
         actual_size = reserved_size;
     }
     T& operator[](int index) // access the element of the array
+    {
+        return vector[index];
+    }
+
+    const T& operator[](int index) const
     {
         return vector[index];
     }
@@ -279,7 +340,7 @@ public:
     Vector operator +(const Vector& vec)
     {
         Vector c_vec(*this);
-        for (int i = 0; i < c_vec.fixed_size; i++)
+        for (int i = 0; i < vec.fixed_size; i++)
         {
             c_vec.push_back(vec[i]);
         }
@@ -321,9 +382,23 @@ public:
         return *this;
     }
 
+    Iterator begin() const
+    {
+        return vector;
+    }
+
+    Iterator end() const
+    {
+        return (vector + fixed_size);
+    }
+
 
     ~Vector() // destructor
     {
+        for (int i = 0; i < fixed_size; i++)
+        {
+            vector[i].~T();
+        }
         ::operator delete[](vector);
     }
 
