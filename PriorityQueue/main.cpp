@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "selectionsort.h"
 #include "PriorityQueue.h"
 #include "comparator.h"
@@ -16,7 +15,7 @@ void print_vector(Vector<int>& vec)
 
 int main()
 {
-	PriorityQueue<int> queue;
+	PriorityQueue<int,greater<int>> queue;
 	queue.push(12321332);
 	queue.push(999);
 	queue.push(123);
@@ -25,6 +24,6 @@ int main()
 	std::cout << queue.top() << ' ' << queue.back() << '\n';
 	queue.pop();
 	std::cout << queue.top() << ' ' << queue.back() << '\n';
-	Vector<int> vec = queue.get_container();
-	print_vector(vec); 
+	// Vector<int> vec = queue.get_container();
+	// print_vector(vec); 
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <initializer_list>
+#include <cstring>
 //
 //template<typename T> std::ostream& operator << (std::ostream& stream, Vector<T> vec)
 //{
@@ -76,17 +77,21 @@ public:
             this->actual_size = 0;
             //vector = new T[this->actual_size];
             vector = static_cast<T*>(::operator new[](this->actual_size * sizeof(T)));
+            memset(vector, 0, this->actual_size * sizeof(T));
             return;
         }
         vector = static_cast<T*>(::operator new[](actual_size));
+        memset(vector, 0, this->actual_size * sizeof(T));
+
     }
     Vector(std::initializer_list<T> list)  // constructor with initliazer list
         : actual_size(list.size()), fixed_size(list.size())
     {
         //vector = new T[list.size()];
         vector = static_cast<T*>(::operator new[](list.size() * sizeof(T)));
+        memset(vector, 0, list.size() * sizeof(T));
         int i = 0;
-        for (auto& item : list)
+        for (const auto& item : list)
         {
             vector[i++] = item;
         }
@@ -95,6 +100,7 @@ public:
     {
         //vector = new T[arr.actual_size];
         vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        memset(vector, 0, arr.actual_size * sizeof(T));
         for (int i = 0; i < arr.fixed_size; i++)
         {
             vector[i] = arr.vector[i];
@@ -121,6 +127,9 @@ public:
         ::operator delete[](vector);
         //vector = new T[arr.actual_size];
         vector = static_cast<T*>(::operator new[](arr.actual_size * sizeof(T)));
+        memset(vector, 0, arr.actual_size * sizeof(T));
+
+        memset(vector, 0, arr.actual_size * sizeof(T));
         for (int i = 0; i < arr.fixed_size; i++)
         {
             vector[i] = arr.vector[i];
@@ -165,6 +174,7 @@ public:
             ::operator delete[](vector);
             //vector = new T[reserved_size];
             vector = static_cast<T*>(::operator new[](reserved_size * sizeof(T)));
+            memset(vector, 0, reserved_size * sizeof(T));
             actual_size = reserved_size;
             return;
         }
@@ -174,6 +184,7 @@ public:
         }
         //T* new_arr = new T[reserved_size];
         T* new_arr = static_cast<T*>(::operator new[](reserved_size * sizeof(T)));
+        memset(new_arr, 0, reserved_size * sizeof(T));
         for (int i = 0; i < fixed_size; i++)
         {
             new_arr[i] = std::move(vector[i]);
@@ -385,6 +396,10 @@ public:
 
     ~Vector() // destructor
     {
+        for (int i = 0; i < fixed_size; i++)
+        {
+            vector[i].~T();
+        }
         ::operator delete[](vector);
     }
 
