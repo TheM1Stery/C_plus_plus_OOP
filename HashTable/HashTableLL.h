@@ -1,19 +1,20 @@
 #pragma once
 #include "Pair.h"
 #include <vector>
+#include <list>
+#include <stdexcept>
 #include <cmath>
-
 template<typename K, typename T> class HashTable
 {
 	std::hash<K> hash_function;
 	size_t m_size;
-	double m_max_load_factor = 1;
-	std::vector<std::vector<Pair<K,T>>> buckets;
+	size_t m_max_load_factor = 1;
+	std::vector<std::list<Pair<K,T>>> buckets;
 	size_t bucket_id(const K& key) const
 	{
 		return hash_function(key) % buckets.size();
 	}
-	bool is_prime(size_t number) // Есть такая хитрость, что когда количество корзин является простым числом, то колизии происходят меньше, но когда я это делаю то происходит много выделений
+	bool is_prime(size_t number)
 	{
 		if (number <= 1) return false;
 		if (number <= 3) return true;
@@ -29,7 +30,7 @@ template<typename K, typename T> class HashTable
 			}
 		}
 		return true;
-		
+
 	}
 
 	size_t next_prime(size_t number)
@@ -43,7 +44,7 @@ template<typename K, typename T> class HashTable
 			number++;
 		}
 	}
-	
+
 public:
 	HashTable()
 	{
@@ -65,41 +66,47 @@ public:
 	}
 
 
-	
+
 	void rehash(size_t count)
 	{
-		std::vector < Pair<K, T>> pairs;
-		pairs.reserve(m_size);
-		for (int i = 0; i < buckets.size(); i++) // copy pairs to rehash them later(down below)
+		//std::vector < Pair<K, T>> pairs;
+		//pairs.reserve(m_size);
+		//for (int i = 0; i < buckets.size(); i++) // copy pairs to rehash them later(down below)
+		//{
+		//	for (int j = 0; j < buckets[i].size(); j++)
+		//	{
+		//		pairs.push_back(buckets[i][j]);
+		//	}
+		//}
+		std::list<Pair<K, T>> pairs;
+		for (auto& item : buckets)
 		{
-			for (int j = 0; j < buckets[i].size(); j++)
-			{
-				pairs.push_back(buckets[i][j]);
-			}
+			pairs.splice(pairs.begin(),item); // destroys the linked list that was in the bucket and connects it to pairs
 		}
-		buckets.clear(); // при очищении корзин, память на 50% меньше пожирается лол, магия
+
+		buckets.clear();
+
+
+		
 
 		buckets.resize(count);
-		
-		for (int i = 0; i < pairs.size(); i++) // rehash
+
+		//for (int i = 0; i < pairs.size(); i++) // rehash
+		//{
+		//	size_t index = bucket_id(pairs[i].first);
+		//	buckets[index].emplace_back(pairs[i].first, pairs[i].second);
+		//}
+
+		for (auto& item : pairs)
 		{
-			size_t index = bucket_id(pairs[i].first);
-			buckets[index].emplace_back(pairs[i].first, pairs[i].second);
+			size_t index = bucket_id(item.first);
+			buckets[index].emplace_back(item.first, item.second);
 		}
-		
-		
+
 	}
 
-	void insert(const Pair<K,T>& pair)
+	void insert(const Pair<K, T>& pair)
 	{
-		size_t index = bucket_id(pair.first);
-		for (int i = 0; i < buckets[index].size(); i++)
-		{
-			if (buckets[index][i].first == pair.first)
-			{
-				return;
-			}
-		}
 		if (m_size + 1 > m_max_load_factor * buckets.size())
 		{
 			/*size_t num = next_prime(buckets.size() * 2);
@@ -107,7 +114,7 @@ public:
 			size_t num = (buckets.size() == 8 || buckets.size() == 64 ? buckets.size() * 8 : buckets.size() * 2);
 			rehash(num);
 		}
-		index = bucket_id(pair.first);
+		size_t index = bucket_id(pair.first);
 		buckets[index].emplace_back(pair.first, pair.second);
 		m_size++;
 	}
@@ -115,32 +122,49 @@ public:
 	T& operator[](const K& key)
 	{
 		size_t index = bucket_id(key);
-		for (int i = 0; i < buckets[index].size(); i++)
+		/*for (int i = 0; i < buckets[index].size(); i++)
 		{
 			if (buckets[index][i].first == key)
 			{
 				return buckets[index][i].second;
 			}
+		}*/
+		for (auto& item : buckets[index])
+		{
+			if (item.first == key)
+			{
+				return item.second;
+			}
 		}
-		insert({key,0});
+
+
+		insert({ key,0 });
 		index = bucket_id(key);
-		for (int i = 0; i < buckets[index].size(); i++)
+		/*for (int i = 0; i < buckets[index].size(); i++)
 		{
 			if (buckets[index][i].first == key)
 			{
 				return buckets[index][i].second;
 			}
+		}*/
+		for (auto& item : buckets[index])
+		{
+			if (item.first == key)
+			{
+				return item.second;
+			}
 		}
+
 	}
 
 	T& at(const K& key)
 	{
 		size_t index = bucket_id(key);
-		for (int i = 0; i < buckets[index].size(); i++)
+		for (auto& item : buckets[index])
 		{
-			if (buckets[index][i].first == key)
+			if (item.first == key)
 			{
-				return buckets[index][i].second;
+				return item.second;
 			}
 		}
 		throw std::out_of_range("Element not found in the table");
@@ -150,47 +174,41 @@ public:
 	const T& at(const K& key) const
 	{
 		size_t index = bucket_id(key);
-		for (int i = 0; i < buckets[index].size(); i++)
+		for (auto& item : buckets[index])
 		{
-			if (buckets[index][i].first == key)
+			if (item.first == key)
 			{
-				return buckets[index][i].second;
+				return item.second;
 			}
 		}
 		throw std::out_of_range("Element not found in the table");
 	}
-	
+
 	size_t empty() const
 	{
 		return m_size == 0;
 	}
-	
 
 
-	size_t size() const 
+
+	size_t size() const
 	{
 		return m_size;
 	}
-	
+
 	size_t bucket_count() const
 	{
 		return buckets.size();
 	}
 
-	double load_factor() const 
+	size_t load_factor()
 	{
-		return static_cast<double>(m_size) / buckets.size();
+		return m_size / buckets.size();
 	}
-
-	double max_load_factor() const
-	{
-		return m_max_load_factor;
-	}
-
 	std::vector<K> keys() const
 	{
 		std::vector<K> keys;
-		for (auto& item : buckets) 
+		for (auto& item : buckets)
 		{
 			for (auto& item2 : item)
 			{
@@ -198,10 +216,6 @@ public:
 			}
 		}
 		return keys;
-
 	}
 
-
-	
 };
-	
