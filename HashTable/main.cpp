@@ -1,8 +1,8 @@
 ﻿#include <iostream>
 #include <unordered_map>
-#include "HashTable.h" // HashTable with 2D vector
+//#include "HashTable.h" // HashTable with 2D vector
 // HashTable with vector of linked Lists
-//#include "HashTableLL.h"  
+#include "HashTableLL.h"  
 template<typename K, typename T> void print_map(const HashTable<K, T>& map)
 {
 	for (auto& item : map.keys())

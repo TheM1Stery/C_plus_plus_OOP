@@ -3,6 +3,7 @@
 #include <vector>
 #include <list>
 #include <stdexcept>
+#include <cmath>
 template<typename K, typename T> class HashTable
 {
 	std::hash<K> hash_function;
