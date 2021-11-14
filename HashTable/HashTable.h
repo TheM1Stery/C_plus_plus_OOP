@@ -51,7 +51,7 @@ public:
 		m_size = 0;
 	}
 
-	HashTable(double max_f) : HashTable()
+	explicit HashTable(double max_f) : HashTable()
 	{
 		m_max_load_factor = max_f;
 	}
