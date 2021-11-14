@@ -15,10 +15,10 @@ template<typename K, typename T> void print_map(const HashTable<K, T>& map)
 int main()
 {
 	
-	HashTable<std::string, int> table = { {"Hello",2}, {"Goodbye", 5} };
+	HashTable<std::string, int> table = { {"Hello",2}, {"Hello", 5} };
 	
 	print_map(table);
-	
+	std::cout << table.size();
 	
 	
 	

@@ -3,7 +3,6 @@
 #include <vector>
 #include <list>
 #include <stdexcept>
-#include <cmath>
 template<typename K, typename T> class HashTable
 {
 	std::hash<K> hash_function;
@@ -81,7 +80,7 @@ public:
 		std::list<Pair<K, T>> pairs;
 		for (auto& item : buckets)
 		{
-			pairs.splice(pairs.begin(),item); // destroys the linked list that was in the bucket and connects it to pairs
+			pairs.splice(pairs.begin(),item);
 		}
 
 		buckets.clear();
@@ -107,6 +106,14 @@ public:
 
 	void insert(const Pair<K, T>& pair)
 	{
+		size_t index = bucket_id(pair.first);
+		for (auto& item : buckets[index])
+		{
+			if (item.first == pair.first)
+			{
+				return;
+			}
+		}
 		if (m_size + 1 > m_max_load_factor * buckets.size())
 		{
 			/*size_t num = next_prime(buckets.size() * 2);
@@ -114,7 +121,7 @@ public:
 			size_t num = (buckets.size() == 8 || buckets.size() == 64 ? buckets.size() * 8 : buckets.size() * 2);
 			rehash(num);
 		}
-		size_t index = bucket_id(pair.first);
+		index = bucket_id(pair.first);
 		buckets[index].emplace_back(pair.first, pair.second);
 		m_size++;
 	}
