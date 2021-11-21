@@ -11,6 +11,7 @@ class Audio
 	std::string m_title;
 	std::string m_extension;
 public:
+	Audio() = default;
 	explicit Audio(size_t size, size_t duration, size_t bitrate, const std::string& artist, const std::string& title, const std::string& extension);
 
 	size_t size();

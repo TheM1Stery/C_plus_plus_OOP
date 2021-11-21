@@ -11,7 +11,7 @@ class Image
 	std::string m_date_created;
 
 public:
-	
+	Image() = default;
 	explicit Image(size_t size, int width, int height, short day, short month, short year, const std::string& extension);
 		
 	size_t size();

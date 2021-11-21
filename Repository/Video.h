@@ -10,6 +10,7 @@ class Video
 	std::string m_date_created;
 	std::string m_extension;
 public:
+	Video() = default;
 	explicit Video(size_t size, size_t duration, short day, short month, short year, const std::string& m_extension);
 
 	size_t size();

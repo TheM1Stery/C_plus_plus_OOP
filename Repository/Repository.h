@@ -3,7 +3,6 @@
 
 
 #include <initializer_list>
-
 #ifdef VECTOR
 #include <vector>
 
@@ -17,7 +16,7 @@ public:
 		files = list;
 	}
 
-	size_t capacity() const
+	size_t max_size() const
 	{
 		return files.capacity();
 	}
@@ -37,27 +36,27 @@ public:
 		return files[index];
 	}
 
-	void pop_back()
+	void delete_file_back()
 	{
 		files.pop_back();
 	}
 
-	void erase(size_t index)
+	void delete_file(size_t index)
 	{
 		files.erase(files.begin() + index);
 	}
 
-	void push_back(const F& file)
+	void add_file(const F& file)
 	{
 		files.push_back(file);
 	}
 
-	void push_back(F&& file)
+	void add_file(F&& file)
 	{
 		files.push_back(std::move(file));
 	}
 
-	template<typename... args> void  emplace_back(args&&... arguments)
+	template<typename... args> void  create_and_add(args&&... arguments)
 	{
 		files.emplace_back(std::forward<args>(arguments)...);
 	}
@@ -71,12 +70,10 @@ public:
 
 };
 
-#endif
 
 
+#elif defined(LLIST)
 
-
-#ifdef LLIST
 #include <list>
 template<typename F>class Repository
 {
@@ -92,7 +89,7 @@ public:
 	{
 		return files.size();
 	}
-	size_t capacity()
+	size_t max_size()
 	{
 		return files.max_size();
 	}
@@ -117,22 +114,22 @@ public:
 		return *it;
 	}
 
-	void pop_back()
+	void delete_file_back()
 	{
 		files.pop_back();
 	}
 
-	void push_back(const F& file)
+	void add_file(const F& file)
 	{
 		files.push_back(file);
 	}
 
-	void push_back(F&& file)
+	void add_file(F&& file)
 	{
 		files.push_back(std::move(file));
 	}
 
-	void erase(size_t index)
+	void delete_file(size_t index)
 	{
 		typename std::list<F>::iterator it = files.begin();
 		for (int i = 0; i < index && it != files.end(); i++)
@@ -143,7 +140,7 @@ public:
 	}
 
 
-	template<typename... args> void emplace_back(args... arguments)
+	template<typename... args> void create_and_add(args... arguments)
 	{
 		files.emplace_back(std::forward<args>(arguments)...);
 	}
@@ -160,16 +157,32 @@ public:
 };
 
 
-#endif
 
 
-#ifdef RAW
 
+#elif defined(RAW_MEM)
 template<typename F> class Repository
 {
 	F* files;
 	size_t m_capacity;
 	size_t m_size;
+	void reserve(size_t size)
+	{
+		if (!size)
+		{
+			files = new F[size];
+			m_capacity = size;
+			return;
+		}
+		F* temp_arr = new F[size];
+		for (int i = 0; i < m_size; i++)
+		{
+			temp_arr[i] = files[i];
+		}
+		delete[] files;
+		files = temp_arr;
+		m_capacity = size;
+	}
 public:
 	Repository() : files(nullptr), m_capacity(0), m_size(0) {}
 
@@ -177,7 +190,7 @@ public:
 	{
 		m_capacity = cpy.m_capacity;
 		m_size = cpy.m_size;
-		files = new T[m_capacity];
+		files = new F[m_capacity];
 		for (int i = 0; i < m_size; i++)
 		{
 			files[i] = cpy.files[i];
@@ -197,7 +210,43 @@ public:
 
 	Repository(std::initializer_list<F> list)
 	{
-		files = new T[list.size()];
+		files = new F[list.size()];
+		int i = 0;
+		for (auto& item : list)
+		{
+			files[i++] = item;
+		}
+		m_capacity = m_size = list.size();
+	}
+
+	Repository& operator =(const Repository& cpy)
+	{
+		delete[] files;
+		m_capacity = cpy.m_capacity;
+		m_size = cpy.m_size;
+		files = new F[m_capacity];
+		for (int i = 0; i < m_size; i++)
+		{
+			files[i] = cpy.files[i];
+		}
+	}
+
+	Repository& operator=(Repository&& move)
+	{
+		delete[] files;
+		m_capacity = move.m_capacity;
+		m_size = move.m_size;
+		files = move.files;
+
+		files = nullptr;
+		m_capacity = 0;
+		m_size = 0;
+	}
+
+	Repository& operator=(std::initializer_list<F> list)
+	{
+		delete[] files;
+		files = new F[list.size()];
 		int i = 0;
 		for (auto& item : list)
 		{
@@ -211,7 +260,7 @@ public:
 		return m_size;
 	}
 
-	size_t capacity() const
+	size_t max_size() const
 	{
 		return m_capacity;
 	}
@@ -226,7 +275,7 @@ public:
 		return files[index];
 	}
 
-	void pop_back()
+	void delete_file_back()
 	{
 		if (m_size != 0)
 		{
@@ -235,23 +284,53 @@ public:
 		}
 	}
 
-	void erase(size_t index)
+	void delete_file(size_t index)
 	{
 		if (m_size == 0)
 		{
 			return;
 		}
-		for (int i = index; i < m_size - 1; i++)
+		int i = 0;
+		for (i = index; i < m_size - 1; i++)
 		{
 			files[i] = files[i + 1];
 		}
-		files[m_size].~F();
+		files[i].~F();
 		m_size--;
 	}
 
+	void add_file(const F& file)
+	{
+		if (m_size >= m_capacity)
+		{
+			if (!m_capacity) m_capacity++;
+			reserve(m_capacity * 2);
+		}
+		files[m_size] = file;
+		m_size++;
+	}
 
+	void add_file(F&& file)
+	{
+		if (m_size >= m_capacity)
+		{
+			if (!m_capacity) m_capacity++;
+			reserve(m_capacity * 2);
+		}
+		files[m_size] = std::move(file);
+		m_size++;
+	}
 
-
+	template<typename... Args> void create_and_add(Args&&... arguments)
+	{
+		if (m_size >= m_capacity)
+		{
+			if (!m_capacity) m_capacity++;
+			reserve(m_capacity * 2);
+		}
+		files[m_size] = F(std::forward<Args>(arguments)...);
+		m_size++;
+	}
 
 
 
