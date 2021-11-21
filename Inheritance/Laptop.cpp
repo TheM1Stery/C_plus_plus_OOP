@@ -24,3 +24,8 @@ std::string Laptop::touchpad_status()
 {
 	return touchpad ? "Touchpad is active" : "Touchpad is off";
 }
+
+std::string Laptop::manufacturer()
+{
+	return m_manufacturer;
+}

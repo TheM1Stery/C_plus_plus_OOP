@@ -20,5 +20,5 @@ public:
 
 	std::string touchpad_status();
 	
-	
+	std::string manufacturer();
 };
