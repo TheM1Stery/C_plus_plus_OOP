@@ -13,13 +13,13 @@ int main()
 	phone.on();
 	phone.set_alarm(3);*/
 
-	/*GamingLaptop laptop("ROG Zephyrus G", 1337, "ASUS", 2.4);
+	GamingLaptop laptop("ROG Zephyrus G", 1337, "ASUS", 2.4);
 	laptop.overclock(3.2);
 	std::cout << laptop.current_cpu_frequency() << '\n';
 	laptop.toggle_extreme_cooling();
 	laptop.overclock(3.2);
 	std::cout << laptop.current_cpu_frequency() << '\n';
 	laptop.overclock(0.5);
-	std::cout << laptop.current_cpu_frequency() << '\n';*/
+	std::cout << laptop.current_cpu_frequency() << '\n';
 
 }

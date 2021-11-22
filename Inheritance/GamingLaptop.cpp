@@ -25,13 +25,11 @@ void GamingLaptop::overclock(double add_freq)
 {
 	if (m_cpu_frequency + add_freq >= m_overclock_frequency_limit)
 	{
-		std::cout << "New frequency is higher than the limit. Check the frequency limit in the settings" << std::endl;
 		return;
 	}
 
 	if (!m_extreme_cooling)
 	{
-		std::cout << "To overclock you need to have extreme cooling enabled" << std::endl;
 		return;
 	}
 	m_cpu_frequency += add_freq;
