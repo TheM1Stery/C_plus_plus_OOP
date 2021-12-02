@@ -10,6 +10,12 @@ int main()
 	}
 	catch (Exception& err)
 	{
+		std::cout << err.What() << '\n';
+	}
+
+	try {
+		arr.push_back(1337);
+	}catch(Exception& err){
 		std::cout << err.What();
 	}
 	

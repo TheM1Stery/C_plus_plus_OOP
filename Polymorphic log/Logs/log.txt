@@ -1,0 +1,3 @@
+[ ] Info: Seymur joined the system
+[ ] Warning: Seymur isn't allowed to come here
+[ ] Error: User Seymur couldn't be deleted. Terminating the program
