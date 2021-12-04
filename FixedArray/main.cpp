@@ -4,19 +4,12 @@
 
 int main()
 {
-	FixedArray<int, 5> arr{ {1,2,3,4,5} };
-	try {
-		arr.At(1337);
-	}
-	catch (Exception& err)
-	{
-		std::cout << err.What() << '\n';
+	FixedArray<int, 3> arr = {{1,2,3}};
+	
+	for (auto iterator =  arr.begin(); iterator != arr.end(); ++iterator){
+		auto& item = *iterator;
+		std::cout << item << ' ';
 	}
 
-	try {
-		arr.push_back(1337);
-	}catch(Exception& err){
-		std::cout << err.What();
-	}
 	
 }

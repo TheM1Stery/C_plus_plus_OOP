@@ -1,57 +1,50 @@
 #pragma once
 
-
-
-template<typename T> class SharedPtr {
-
-    int* counter;
-    T* pointer;
+template <typename T> class SharedPtr {
+	int* counter;
+	T* ptr;
 public:
-    SharedPtr()
-        : pointer(nullptr), counter(new int{1}) {}
-    SharedPtr(T* ptr)
-        : pointer(ptr), counter(new int{1}) {}
-    
-    SharedPtr(const SharedPtr& c_ptr){
-        counter = c_ptr.counter;
-        pointer = c_ptr.pointer;
-        (*counter)++;
-    }
+	SharedPtr() : ptr(nullptr), counter(new int{ 1 }) {}
 
-    SharedPtr& operator = (const SharedPtr& c_ptr){
-        *(counter)--;
-        if (*counter == 0){
-            delete counter;
-            delete ptr;
-        }
-        counter = c_ptr.counter;
-        pointer = c_ptr.pointer;
-        *(counter)++;
-        return *this;
-    }
-    
-    T* operator ->(){
-        return pointer;
-    }
+	SharedPtr(T* pointer) : ptr(pointer), counter(new int{ 1 }) {}
 
-    T& operator*(){
-        return *pointer;
-    }
+	SharedPtr(const SharedPtr& c_ptr) {
+		ptr = c_ptr.ptr;
+		counter = c_ptr.counter;
+		(*counter)++;
+	}
 
-    int get_count(){
-        retunr *counter;
-    }
-    
+	SharedPtr& operator = (const SharedPtr& c_ptr) {
+		(*counter)--;
+		if (*counter == 0) {
+			delete ptr;
+			delete counter;
+		}
+		ptr = c_ptr.ptr;
+		counter = c_ptr.counter;
+		(*counter)++;
+		return *this;
+	}
+
+	int get_count() {
+		return *counter;
+	}
 
 
+	T* operator->(){
+		return ptr;
+	}
 
-    ~SharedPtr(){
+	T& operator*() {
+		return *ptr;
+	}
 
-        *(counter)--;
-        if (*counter == 0){
-            delete counter;
-            delete ptr;
-        }
 
-    }
-}
+	~SharedPtr(){
+		(*counter)--;
+		if (*counter == 0) {
+			delete ptr;
+			delete counter;
+		}
+	}
+};
